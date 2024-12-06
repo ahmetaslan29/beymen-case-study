@@ -5,7 +5,7 @@ import { StatCardComponent } from '../../component/stat-card/stat-card.component
 import { TurkishUppercasePipe } from '../../pipes/turkish-uppercase/turkish-uppercase.pipe';
 import { FormsModule } from '@angular/forms';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
-import {} from 'ngx-daterangepicker-material';
+import { DataTable, Total, StatusEnum,StatCards  } from '../../types';
 
 @Component({
   selector: 'app-home',
@@ -22,12 +22,12 @@ import {} from 'ngx-daterangepicker-material';
 export class HomeComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
-  dataTable: any[] = [];
-  filteredData: any[] = [];
-  paginatedData: any[] = [];
+  dataTable: DataTable[] = [];
+  filteredData: DataTable[] = [];
+  paginatedData: DataTable[] = [];
   visiblePages: number[] = [];
   totalPages: number = 0;
-  dateTotal : number = 0;
+  dateTotal: Total = { total: 0 };
   filters: any = {
     shipmentTrackingNo: '',
     orderTrackingNo: '',
@@ -39,18 +39,27 @@ export class HomeComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 5;
   pageSizes: number[] = [5, 10, 20];
+  statusEnumEntries: any[] = Object.entries(StatusEnum).filter(([key]) => !isNaN(Number(key)));
 
-
-
-  statusEnum: { [key: string]: string } = {
-    '0': 'Oluşturuldu',
-    '1': 'İptal Edildi',
-    '2': 'Teslim Edildi',
-    '3': 'Bekliyor',
-    '4': 'Teslim Edilemedi',
+  statusText = (status: StatusEnum): string => {
+    switch (Number(status)) {
+      case StatusEnum.Created:
+        return 'Oluşturuldu';
+      case StatusEnum.Canceled:
+        return 'İptal Edildi';
+      case StatusEnum.Delivered:
+        return 'Teslim Edildi';
+      case StatusEnum.Pending:
+        return 'Bekliyor';
+      case StatusEnum.NotDelivered:
+        return 'Teslim Edilemedi';
+      default:
+        return 'Bilinmiyor';
+    }
   };
 
-  statCards = [
+
+  statCards: StatCards[] = [
     { title: 'Rotadaki Paket', value: 721, bgColor: 'bg-blue-100' },
     { title: 'Dm Paket Sayısı', value: 367, bgColor: 'bg-slate-200' },
     { title: 'Dağıtıma Çıkan Paket', value: 250, bgColor: 'bg-blue-100' },
@@ -58,25 +67,20 @@ export class HomeComponent implements OnInit {
     { title: 'Teslim Edilemedi', value: 20, bgColor: 'bg-blue-100' },
   ];
 
-  navigateToDetail(orderNo: string): void {
+  navigateToDetail(orderNo: number): void {
     window.location.href = `/detail/${orderNo}`;
   }
 
-
   loadData() {
-    this.http.get<any[]>('http://localhost:3000/dataTable').subscribe((data) => {
-
+    this.http.get<DataTable[]>('http://localhost:3000/dataTable').subscribe((data) => {
       this.dataTable = data;
       this.filteredData = data;
       this.updatePaginatedData();
-
     });
 
-    this.http.get<number>('http://localhost:3000/total').subscribe((data) => {
+    this.http.get<Total>('http://localhost:3000/total').subscribe((data) => {
       this.dateTotal = data;
     });
-
-
   }
 
   applyFilters() {

@@ -15,8 +15,7 @@
     <!-- Tamamlanan Sipariş -->
     <div class="w-full h-9 bg-red-800 rounded-full relative text-base mt-3">
       <div class="h-full bg-green-800 rounded-full" style="width: 75%"></div>
-      <span class="absolute inset-0 flex items-center justify-center text-white">{{ "Tamamlanan Sipariş 400/300" |
-        turkishUppercase }}</span>
+      <span class="absolute inset-0 flex items-center justify-center text-white">{{ "Tamamlanan Sipariş 400/300" | turkishUppercase }}</span>
     </div>
 
     <div class="w-full h-full flex flex-col items-center justify-center gap-3 mt-4">
@@ -52,8 +51,8 @@
             <img src="/icons/calender.svg" alt="Calendar Icon" class="h-full w-full pointer-events-none" />
           </div>
           <input type="text" ngxDaterangepickerMd [(ngModel)]="filters.date"
-            [locale]="{ applyLabel: 'ok', format: 'DD-MM-YYYY' }" clearLabel="Clear"
-            class="pl-10 pr-4 py-3 w-full rounded-lg bg-gray-200 focus:outline-none" readonly
+            [locale]="{ applyLabel: 'ok', format: 'DD-MM-YYYY' }"
+            class="pl-10 pr-4 py-3 w-full rounded-lg bg-gray-200 focus:outline-none"
             placeholder="Tarih Aralığı" />
         </div>
 
@@ -65,12 +64,9 @@
           </div>
           <select [(ngModel)]="filters.statu"
             class="pl-10 pr-4 py-3 w-full rounded-lg bg-gray-200 focus:outline-none appearance-none">
-            <option value="" selected>Durum</option>
-            <option value="0">Oluşturuldu</option>
-            <option value="1">İptal Edildi</option>
-            <option value="2">Teslim Edildi</option>
-            <option value="3">Bekliyor</option>
-            <option value="4">Teslim Edilemedi</option>
+            <option value="" selected>Durumu</option>
+            <option *ngFor="let entry of statusEnumEntries" value="{{entry[0]}}">{{statusText(entry[0])}}</option>
+
           </select>
         </div>
 
@@ -124,7 +120,7 @@
             <td class="py-2">{{ row.district }}</td>
             <td class="py-2">{{ row.plate }}</td>
             <td class="py-2">{{ row.releasedForDistribution }}</td>
-            <td class="py-2">{{ statusEnum[row.Statu] }}</td>
+            <td class="py-2">{{ statusText(row.Statu) }}</td>
 
             <td class="py-2">{{ row.Date | date: 'dd.MM.yyyy' }}</td>
             <td class="py-2">
