@@ -18,7 +18,7 @@ export interface StatCards {
 
 export interface Total {
   total: number;
- }
+}
 
 export enum StatusEnum {
   Created = 0,          // Oluşturuldu

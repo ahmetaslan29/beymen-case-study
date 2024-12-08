@@ -6,6 +6,7 @@ import { TurkishUppercasePipe } from '../../pipes/turkish-uppercase/turkish-uppe
 import { FormsModule } from '@angular/forms';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { DataTable, Total, StatusEnum,StatCards  } from '../../types';
+import { IndexService } from '../../services/index.service';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,10 @@ import { DataTable, Total, StatusEnum,StatCards  } from '../../types';
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _http: IndexService
+  ) {}
 
   dataTable: DataTable[] = [];
   filteredData: DataTable[] = [];
@@ -72,15 +76,16 @@ export class HomeComponent implements OnInit {
   }
 
   loadData() {
-    this.http.get<DataTable[]>('http://localhost:3000/dataTable').subscribe((data) => {
-      this.dataTable = data;
-      this.filteredData = data;
+    this._http.getDataTable(res => {
+      this.dataTable = res;
+      this.filteredData = res;
       this.updatePaginatedData();
-    });
+    })
 
-    this.http.get<Total>('http://localhost:3000/total').subscribe((data) => {
-      this.dateTotal = data;
-    });
+    this._http.getTotal(res =>{
+      this.dateTotal = res;
+    })
+
   }
 
   applyFilters() {
