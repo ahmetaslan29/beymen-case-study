@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { MasterLayoutComponent } from './master/master-layout.component';
 import { HomeComponent } from './master/home/home.component';
-import { DetailComponent } from './master/detail/detail.component';
 
 export const routes: Routes = [
   {
@@ -9,7 +8,11 @@ export const routes: Routes = [
     component: MasterLayoutComponent,
     children: [
       { path: 'home', component: HomeComponent },
-      { path: 'detail/:orderNo', component: DetailComponent },
+      {
+        path: 'detail/:orderNo',
+        loadComponent: () =>
+          import('./master/detail/detail.component').then((m) => m.DetailComponent),
+      },
       { path: '', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
@@ -18,5 +21,4 @@ export const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full',
   },
-
 ];

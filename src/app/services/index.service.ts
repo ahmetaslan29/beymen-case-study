@@ -14,7 +14,6 @@ export class IndexService {
   ) { }
 
   getDataTable(callback:(res:any)=> void, params?: { [key: string]: any }) {
-    // return this._http.get<DataTable[]>('http://localhost:3000/dataTable')
 
     const options = params ? { params: params } : {};
     this._http.get<DataTable[]>('http://localhost:3000/dataTable', options).subscribe({

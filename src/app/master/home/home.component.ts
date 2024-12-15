@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { StatCardComponent } from '../../component/stat-card/stat-card.component';
 import { TurkishUppercasePipe } from '../../pipes/turkish-uppercase/turkish-uppercase.pipe';
@@ -7,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { DataTable, Total, StatusEnum,StatCards  } from '../../types';
 import { IndexService } from '../../services/index.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -22,8 +22,8 @@ import { IndexService } from '../../services/index.service';
 })
 export class HomeComponent implements OnInit {
   constructor(
-    private http: HttpClient,
-    private _http: IndexService
+    private _http: IndexService,
+    private router: Router
   ) {}
 
   dataTable: DataTable[] = [];
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
   ];
 
   navigateToDetail(orderNo: number): void {
-    window.location.href = `/detail/${orderNo}`;
+    this.router.navigate([`/detail/${orderNo}`]);
   }
 
   loadData() {
